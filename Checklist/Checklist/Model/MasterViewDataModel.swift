@@ -7,6 +7,7 @@
 
 import Foundation
 
+//Structure to store Master view screen information
 struct MasterViewDataModel: Codable, Identifiable {
     let id: String?
     var listItem: String?

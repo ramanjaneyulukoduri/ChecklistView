@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Checkview to use checkbox item to display in Master and Detail view.
 struct CheckView: View {
     let id: String
     var isChecked:Bool
@@ -17,7 +18,7 @@ struct CheckView: View {
         HStack{
             Text(title)
             Spacer()
-            Button(action: {
+            Button(action: { //Button action to handle event when user click on checkbox button
                 checkBoxAction(id, !isChecked)
             }) {
                 Image(systemName: isChecked ? "checkmark.square" : "square")
