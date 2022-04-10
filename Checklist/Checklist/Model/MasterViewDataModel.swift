@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct MasterViewDataModel: Codable, Identifiable {
+    let id: String?
+    var listItem: String?
+}

@@ -17,6 +17,7 @@
 		AB0441682802DBBD008539B5 /* CheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0441672802DBBD008539B5 /* CheckView.swift */; };
 		AB04416B2802DBD6008539B5 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB04416A2802DBD6008539B5 /* DetailView.swift */; };
 		AB04416F2802DC08008539B5 /* MasterViewDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB04416E2802DC08008539B5 /* MasterViewDataModel.swift */; };
+		AB0441712802DCCE008539B5 /* CheckListDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0441702802DCCE008539B5 /* CheckListDataModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		AB0441672802DBBD008539B5 /* CheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckView.swift; sourceTree = "<group>"; };
 		AB04416A2802DBD6008539B5 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		AB04416E2802DC08008539B5 /* MasterViewDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewDataModel.swift; sourceTree = "<group>"; };
+		AB0441702802DCCE008539B5 /* CheckListDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListDataModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +150,7 @@
 			isa = PBXGroup;
 			children = (
 				AB04416E2802DC08008539B5 /* MasterViewDataModel.swift */,
+				AB0441702802DCCE008539B5 /* CheckListDataModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -290,6 +293,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB0441712802DCCE008539B5 /* CheckListDataModel.swift in Sources */,
 				AB0441402802DB17008539B5 /* MasterView.swift in Sources */,
 				AB04416B2802DBD6008539B5 /* DetailView.swift in Sources */,
 				AB04416F2802DC08008539B5 /* MasterViewDataModel.swift in Sources */,
