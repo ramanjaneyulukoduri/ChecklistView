@@ -8,13 +8,29 @@
 import SwiftUI
 
 struct CheckView: View {
+    let id: String
+    var isChecked:Bool
+    var title:String
+    var checkBoxAction: (String,  Bool) -> Void
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack{
+            Text(title)
+            Spacer()
+            Button(action: {
+                checkBoxAction(id, !isChecked)
+            }) {
+                Image(systemName: isChecked ? "checkmark.square" : "square")
+                    .foregroundColor(isChecked ? .green : .gray)
+            }
+        }
     }
 }
 
+#if DEBUG
 struct CheckView_Previews: PreviewProvider {
     static var previews: some View {
-        CheckView()
+        CheckView(id: "", isChecked: true, title:"Title", checkBoxAction: {_,_ in })
     }
 }
+#endif
