@@ -112,7 +112,7 @@ struct DetailView: View {
     }
     
     
-    func checkBoxAction(id: String, isChecked: Bool) -> Void {
+    func checkBoxAction(id: String, text: String, isChecked: Bool) -> Void {
         updateCheckBoxItem(id: id, isChecked: isChecked)
     }
     //Update state of checkbox for individua row

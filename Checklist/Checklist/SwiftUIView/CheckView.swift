@@ -12,14 +12,14 @@ struct CheckView: View {
     let id: String
     var isChecked:Bool
     var title:String
-    var checkBoxAction: (String,  Bool) -> Void
+    var checkBoxAction: (String, String, Bool) -> Void
     
     var body: some View {
         HStack{
             Text(title)
             Spacer()
             Button(action: { //Button action to handle event when user click on checkbox button
-                checkBoxAction(id, !isChecked)
+                checkBoxAction(id, title, !isChecked)
             }) {
                 Image(systemName: isChecked ? "checkmark.square" : "square")
                     .foregroundColor(isChecked ? .green : .gray)
@@ -31,7 +31,6 @@ struct CheckView: View {
 #if DEBUG
 struct CheckView_Previews: PreviewProvider {
     static var previews: some View {
-        CheckView(id: "", isChecked: true, title:"Title", checkBoxAction: {_,_ in })
-    }
+        CheckView(id: "", isChecked: true, title:"Title", checkBoxAction: {_,_, _ in })    }
 }
 #endif

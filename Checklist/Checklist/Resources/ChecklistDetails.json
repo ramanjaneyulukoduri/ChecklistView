@@ -1,0 +1,60 @@
+{
+    "ChecklistDetails" : {
+        "lastUpdated" : "14/4/2022",
+        "header": "Checklist Details",
+        "masterViewItems" : [
+            {
+                "id" : "1",
+                "title" : "Grocerries",
+                "detailViewItems" : [
+                    {
+                        "id" : "1",
+                        "isChecked": false,
+                        "title": "Milk"
+                    },
+                    {
+                        "id" : "2",
+                        "isChecked": false,
+                        "title": "Toast"
+                    },
+                    {
+                        "id" : "3",
+                        "isChecked": false,
+                        "title": "Buscuits"
+                    },
+                    {
+                        "id" : "4",
+                        "isChecked": false,
+                        "title": "Maggy"
+                    },
+                ]
+            },
+            {
+                "id" : "2",
+                "title" : "Workout",
+                "detailViewItems" : [
+                    {
+                        "id" : "1",
+                        "isChecked": false,
+                        "title": "Seat ups"
+                    },
+                    {
+                        "id" : "2",
+                        "isChecked": false,
+                        "title": "Plank"
+                    },
+                    {
+                        "id" : "3",
+                        "isChecked": false,
+                        "title": "Abs workout"
+                    },
+                    {
+                        "id" : "4",
+                        "isChecked": false,
+                        "title": "Cardio"
+                    }
+                ]
+            }
+        ]
+    }
+}

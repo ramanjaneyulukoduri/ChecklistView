@@ -14,32 +14,35 @@ struct MasterView: View {
     @State var isEditing: Bool = false //to decide if screen is in editing mode so that we can delete entry if needed
     @State var textFieldEntry: String = "" //to store value entered by user while creating new entry
     
+    @Binding var checklistDetails: ChecklistDetails
+    
     var body: some View {
         NavigationView { //this to show navigation bar on top of it.
             VStack {
                 List() { //Scrollable view
-                    ForEach(masterViewModelItems) { item in
-                        //Navigation link to go to detail view on click on item
-                        NavigationLink(destination: DetailView(headerTextFieldEntry: item.listItem ?? "",
-                                                               masterViewId: item.id ?? "",
-                                                               masterViewModelItems: $masterViewModelItems)) {
-                            Text("\(item.listItem ?? "")")
-                        }
-                    } .onDelete(perform: deleteItems)
-                    if isEditing {
-                        HStack {
-                            Image(systemName: ImageName.plusCircle)
-                                .foregroundColor(.green)
-                            //Text field to get user's entry to add new item
-                            TextField(StringConstants.textFieldPlaceHolder, text: $textFieldEntry)
-                                .onSubmit {
-                                    addItem(text: textFieldEntry)
-                                    textFieldEntry = ""
-                                }
+                    if let masterViewItems = checklistDetails.masterViewItems {
+                        ForEach(masterViewItems) { masterViewItem in
+                            //Navigation link to go to detail view on click on item
+                            NavigationLink(destination: DetailView(headerTextFieldEntry: masterViewItem.title ?? "",
+                                                                   masterViewId: masterViewItem.id ?? "",
+                                                                   masterViewModelItems: $masterViewModelItems)) {
+                                Text("\(masterViewItem.title ?? "")")
+                            }
+                        } .onDelete(perform: deleteItems)
+                        if isEditing {
+                            HStack {
+                                Image(systemName: ImageName.plusCircle)
+                                    .foregroundColor(.green)
+                                //Text field to get user's entry to add new item
+                                TextField(StringConstants.textFieldPlaceHolder, text: $textFieldEntry)
+                                    .onSubmit {
+                                        addItem(text: textFieldEntry)
+                                        textFieldEntry = ""
+                                    }
+                            }
                         }
                     }
-                }
-                .font(.body)
+                }.font(.body)
             }.navigationTitle(StringConstants.checkList)
                 .toolbar { //to show edit and add button on navigation bar
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -65,7 +68,7 @@ struct MasterView: View {
                 }
         }
     }
-
+    
     //Button action when user click on done button to save entry and update view.
     func doneButtonAction() {
         if !isEditing {
@@ -79,6 +82,8 @@ struct MasterView: View {
         let id = text.replacingOccurrences(of: " ", with: "")
         let masterDetailModel = MasterViewDataModel(id: id, listItem: text)
         masterViewModelItems.append(masterDetailModel)
+       // checklistDetails.masterViewItems?.append(MasterViewItems(id: id, title: text, detailViewItems: nil))
+        CheckListApp.save()
     }
     
     //Delete item when user click on delete button
@@ -89,6 +94,6 @@ struct MasterView: View {
 
 struct CheckListView_Previews: PreviewProvider {
     static var previews: some View {
-        MasterView()
+        MasterView(checklistDetails: .constant(ChecklistDetails(lastUpdated: "", header: "", masterViewItems: nil)))
     }
 }

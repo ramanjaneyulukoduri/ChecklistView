@@ -19,6 +19,8 @@
 		AB04416F2802DC08008539B5 /* MasterViewDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB04416E2802DC08008539B5 /* MasterViewDataModel.swift */; };
 		AB0441712802DCCE008539B5 /* CheckListDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0441702802DCCE008539B5 /* CheckListDataModel.swift */; };
 		AB0441732802DD28008539B5 /* StringConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0441722802DD28008539B5 /* StringConstants.swift */; };
+		AB71195E2809398500514793 /* ChecklistDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB71195D2809398500514793 /* ChecklistDetailsModel.swift */; };
+		AB711960280939FA00514793 /* ChecklistDetails.json in Resources */ = {isa = PBXBuildFile; fileRef = AB71195F280939FA00514793 /* ChecklistDetails.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,8 @@
 		AB04416E2802DC08008539B5 /* MasterViewDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewDataModel.swift; sourceTree = "<group>"; };
 		AB0441702802DCCE008539B5 /* CheckListDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListDataModel.swift; sourceTree = "<group>"; };
 		AB0441722802DD28008539B5 /* StringConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringConstants.swift; sourceTree = "<group>"; };
+		AB71195D2809398500514793 /* ChecklistDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistDetailsModel.swift; sourceTree = "<group>"; };
+		AB71195F280939FA00514793 /* ChecklistDetails.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ChecklistDetails.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +157,7 @@
 			children = (
 				AB04416E2802DC08008539B5 /* MasterViewDataModel.swift */,
 				AB0441702802DCCE008539B5 /* CheckListDataModel.swift */,
+				AB71195D2809398500514793 /* ChecklistDetailsModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -162,6 +167,7 @@
 			children = (
 				AB0441412802DB18008539B5 /* Assets.xcassets */,
 				AB0441722802DD28008539B5 /* StringConstants.swift */,
+				AB71195F280939FA00514793 /* ChecklistDetails.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -271,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB0441452802DB18008539B5 /* Preview Assets.xcassets in Resources */,
+				AB711960280939FA00514793 /* ChecklistDetails.json in Resources */,
 				AB0441422802DB18008539B5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -303,6 +310,7 @@
 				AB04416F2802DC08008539B5 /* MasterViewDataModel.swift in Sources */,
 				AB04413E2802DB17008539B5 /* ChecklistApp.swift in Sources */,
 				AB0441682802DBBD008539B5 /* CheckView.swift in Sources */,
+				AB71195E2809398500514793 /* ChecklistDetailsModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
