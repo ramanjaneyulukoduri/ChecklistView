@@ -9,10 +9,10 @@ import SwiftUI
 
 //Checkview to use checkbox item to display in Master and Detail view.
 struct CheckView: View {
-    let id: String
+    let id: Int
     var isChecked:Bool
     var title:String
-    var checkBoxAction: (String, Bool) -> Void
+    var checkBoxAction: (Int, Bool) -> Void
 
     var body: some View {
         HStack{
@@ -31,7 +31,7 @@ struct CheckView: View {
 #if DEBUG
 struct CheckView_Previews: PreviewProvider {
     static var previews: some View {
-        CheckView(id: "", isChecked: true, title:"Title", checkBoxAction: {_, _ in })
+        CheckView(id: 0, isChecked: true, title:"Title", checkBoxAction: {_, _ in })
     }
 }
 #endif

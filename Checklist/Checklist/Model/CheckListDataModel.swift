@@ -9,7 +9,7 @@ import Foundation
 
 //Structure to save Detail view screen information
 struct CheckListDataModel: Codable, Identifiable {
-    var id: String
+    var id: Int
     var isChecked: Bool
     var title: String?
 }

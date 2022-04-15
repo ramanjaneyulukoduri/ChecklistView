@@ -25,13 +25,14 @@ struct MasterView: View {
                     ForEach(masterViewModelItems) { item in
                         //Navigation link to go to detail view on click on item
                         NavigationLink(destination: DetailView(masterViewModelItems: $masterViewModelItems,
-                                                               headerTextFieldEntry: item.listItem ?? "",
-                                                               masterViewId: item.id ?? "")) {
-                            Text("\(item.listItem ?? "")")
+                                                               headerTextFieldEntry: item.listItem,
+                                                               masterViewId: item.id)) {
+                            Text("\(item.listItem)")
                         }
                     } .onDelete(perform: deleteItems)
                         .onMove { IndexSet, index in
                             masterViewModelItems.move(fromOffsets: IndexSet, toOffset: index)
+                            updatedIndexOfArray()
                         }
                     if isEditing {
                         addTextField()
@@ -86,6 +87,7 @@ struct MasterView: View {
     func updateModel() {
         if let wrappedMasterViewModelItems = UserDefaultManager().getMasterViewItems() {
             masterViewModelItems = wrappedMasterViewModelItems
+            masterViewModelItems = masterViewModelItems.sorted(by: {$0.id < $1.id})
         }
     }
     
@@ -101,9 +103,21 @@ struct MasterView: View {
         }
     }
     
+    func updatedIndexOfArray() {
+        for (index, item) in masterViewModelItems.enumerated() {
+            masterViewModelItems = masterViewModelItems.map({ checkListDataModel in
+                var updatedCheckListDataModel = checkListDataModel
+                if item.listItem == checkListDataModel.listItem {
+                    updatedCheckListDataModel.id = index + 1
+                }
+                return updatedCheckListDataModel
+            })
+        }
+    }
+    
     private func addItem(text: String) {
         guard !text.isEmpty else { return }
-        let id = text.replacingOccurrences(of: " ", with: "")
+        let id = masterViewModelItems.count + 1
         let masterDetailModel = MasterViewDataModel(id: id, listItem: text)
         masterViewModelItems.append(masterDetailModel)
     }

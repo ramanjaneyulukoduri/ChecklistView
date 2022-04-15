@@ -9,7 +9,7 @@ import Foundation
 
 //Structure to store Master view screen information
 struct MasterViewDataModel: Codable, Identifiable {
-    let id: String?
-    var listItem: String?
+    var id: Int
+    var listItem: String
     var childItems: [CheckListDataModel]?
 }

@@ -25,21 +25,22 @@ struct DetailView: View {
     @State var isReset: Bool = false
     @State var textFieldEntry: String = ""
     @State var headerTextFieldEntry: String = ""
-    let masterViewId: String
+    let masterViewId: Int
     
     var body: some View {
         VStack {
             List() {
                 getHeaderView()
                 
-                ForEach(checkListDataModelArray) { item in
-                    CheckView(id: item.id,
+                ForEach(Array(checkListDataModelArray.enumerated()), id: \.offset) { (index, item) in
+                    CheckView(id: index,
                               isChecked: item.isChecked,
                               title: item.title ?? "",
                               checkBoxAction: updateCheckBoxItem)
                 } .onDelete(perform: deleteItems) //Delete entry from user
                     .onMove { IndexSet, index in
                         checkListDataModelArray.move(fromOffsets: IndexSet, toOffset: index)
+                        updatedIndexOfArray()
                     }
                 if isEditing {
                     addTextFieldView()
@@ -60,6 +61,18 @@ struct DetailView: View {
             }
         }.onAppear {
             updateModel()
+        }
+    }
+    
+    func updatedIndexOfArray() {
+        for (index, item) in checkListDataModelArray.enumerated() {
+            checkListDataModelArray = checkListDataModelArray.map({ checkListDataModel in
+                var updatedCheckListDataModel = checkListDataModel
+                if item.title == checkListDataModel.title {
+                    updatedCheckListDataModel.id = index + 1
+                }
+                return updatedCheckListDataModel
+            })
         }
     }
     
@@ -110,6 +123,7 @@ struct DetailView: View {
     
     func updateModel() {
         checkListDataModelArray = masterViewModelItems.filter({$0.id == masterViewId}).first?.childItems ?? []
+        checkListDataModelArray = checkListDataModelArray.sorted(by: {$0.id < $1.id})
         checkListDataModelResetArray = checkListDataModelArray
     }
     
@@ -134,7 +148,7 @@ struct DetailView: View {
     }
     
     //Update state of checkbox for individua row
-    func updateCheckBoxItem(id: String, isChecked: Bool) {
+    func updateCheckBoxItem(id: Int, isChecked: Bool) {
         checkListDataModelArray = checkListDataModelArray.map({ checkListDataModel in
             var updateModel = checkListDataModel
             if updateModel.id == id {
@@ -164,7 +178,7 @@ struct DetailView: View {
     //Enter new entry to checklist
     private func addItem(text: String) {
         guard !text.isEmpty else { return }
-        let id = text.replacingOccurrences(of: " ", with: "")
+        let id = checkListDataModelArray.count + 1
         let checkListDataModel = CheckListDataModel(id: id, isChecked: false, title: text)
         checkListDataModelArray.append(checkListDataModel)
     }
@@ -177,6 +191,6 @@ struct DetailView: View {
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(masterViewModelItems: .constant([]), masterViewId: "")
+        DetailView(masterViewModelItems: .constant([]), masterViewId: 0)
     }
 }
