@@ -9,21 +9,23 @@ import SwiftUI
 
 //This view display all information for checklist items
 struct DetailView: View {
+    @Binding var masterViewModelItems : [MasterViewDataModel] {
+        didSet {
+            syncMasterViewItems()
+        }
+    } //to update view in parent screen when user update header items
+    
     @State var checkListDataModelArray : [CheckListDataModel] = []  {
         didSet {
             updatedParentViewModel()
-        }}
+        }
+    }
     @State var checkListDataModelResetArray : [CheckListDataModel] = []
     @State var isEditing: Bool = false
     @State var isReset: Bool = false
     @State var textFieldEntry: String = ""
     @State var headerTextFieldEntry: String = ""
     let masterViewId: String
-    @Binding var masterViewModelItems : [MasterViewDataModel] {
-        didSet {
-            syncMasterViewItems()
-        }
-    } //to update view in parent screen when user update header items
     
     var body: some View {
         VStack {
@@ -40,15 +42,7 @@ struct DetailView: View {
                         checkListDataModelArray.move(fromOffsets: IndexSet, toOffset: index)
                     }
                 if isEditing {
-                    HStack {
-                        Image(systemName: ImageName.plusCircle)
-                            .foregroundColor(.green)
-                        TextField(StringConstants.textFieldPlaceHolder, text: $textFieldEntry)
-                            .onSubmit {
-                                addItem(text: textFieldEntry)
-                                textFieldEntry = ""
-                            }
-                    }
+                    addTextFieldView()
                 }
             }
             .environment(\.editMode, .constant(self.isEditing ? EditMode.active : EditMode.inactive))
@@ -56,22 +50,8 @@ struct DetailView: View {
         }.toolbar {
             //To show buttons in navigation bar
             ToolbarItem(placement: .navigationBarTrailing) {
-                
                 if isEditing {
-                    HStack {
-                        Button(action: {
-                            self.isReset.toggle()
-                            resetButtonAction()
-                        }) {
-                            Text(isReset ? StringConstants.undoReset : StringConstants.reset)
-                                .foregroundColor(isReset ? .red : .blue)
-                        }
-                        
-                        Button(isEditing ? StringConstants.done : StringConstants.edit) {
-                            self.isEditing.toggle()
-                            doneButtonAction()
-                        }
-                    }
+                    addEditModeHeaderView()
                 } else {
                     Button(StringConstants.edit) {
                         self.isEditing.toggle()
@@ -94,6 +74,36 @@ struct DetailView: View {
                 Text(headerTextFieldEntry)
                     .font(.title)
                     .fontWeight(.bold)
+            }
+        }
+    }
+    
+    
+    func addTextFieldView() -> some View {
+        HStack {
+            Image(systemName: ImageName.plusCircle)
+                .foregroundColor(.green)
+            TextField(StringConstants.textFieldPlaceHolder, text: $textFieldEntry)
+                .onSubmit {
+                    addItem(text: textFieldEntry)
+                    textFieldEntry = ""
+                }
+        }
+    }
+    
+    func addEditModeHeaderView () -> some View {
+        HStack {
+            Button(action: {
+                self.isReset.toggle()
+                resetButtonAction()
+            }) {
+                Text(isReset ? StringConstants.undoReset : StringConstants.reset)
+                    .foregroundColor(isReset ? .red : .blue)
+            }
+            
+            Button(isEditing ? StringConstants.done : StringConstants.edit) {
+                self.isEditing.toggle()
+                doneButtonAction()
             }
         }
     }
@@ -167,6 +177,6 @@ struct DetailView: View {
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(masterViewId: "", masterViewModelItems: .constant([]))
+        DetailView(masterViewModelItems: .constant([]), masterViewId: "")
     }
 }

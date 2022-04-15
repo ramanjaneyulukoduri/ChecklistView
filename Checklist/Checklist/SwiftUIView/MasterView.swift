@@ -17,16 +17,16 @@ struct MasterView: View {
     @State var isEditing: Bool = false //to decide if screen is in editing mode so that we can delete entry if needed
     @State var textFieldEntry: String = "" //to store value entered by user while creating new entry
     @State var updateFromChild: Bool = false
-
+    
     var body: some View {
         NavigationView { //this to show navigation bar on top of it.
             VStack {
                 List() { //Scrollable view
                     ForEach(masterViewModelItems) { item in
                         //Navigation link to go to detail view on click on item
-                        NavigationLink(destination: DetailView(headerTextFieldEntry: item.listItem ?? "",
-                                                               masterViewId: item.id ?? "",
-                                                               masterViewModelItems: $masterViewModelItems)) {
+                        NavigationLink(destination: DetailView(masterViewModelItems: $masterViewModelItems,
+                                                               headerTextFieldEntry: item.listItem ?? "",
+                                                               masterViewId: item.id ?? "")) {
                             Text("\(item.listItem ?? "")")
                         }
                     } .onDelete(perform: deleteItems)
@@ -34,30 +34,14 @@ struct MasterView: View {
                             masterViewModelItems.move(fromOffsets: IndexSet, toOffset: index)
                         }
                     if isEditing {
-                        HStack {
-                            Image(systemName: ImageName.plusCircle)
-                                .foregroundColor(.green)
-                            //Text field to get user's entry to add new item
-                            TextField(StringConstants.textFieldPlaceHolder, text: $textFieldEntry)
-                                .onSubmit {
-                                    addItem(text: textFieldEntry)
-                                    textFieldEntry = ""
-                                }
-                        }
+                        addTextField()
                     }
                 }
                 .font(.body)
             }.navigationTitle(StringConstants.checkList)
                 .toolbar { //to show edit and add button on navigation bar
                     ToolbarItem(placement: .navigationBarLeading) {
-                        if isEditing {
-                            Button(StringConstants.done) {
-                                self.isEditing.toggle()
-                                doneButtonAction()
-                            }
-                        } else {
-                            EditButton()
-                        }
+                        addEditModeHeaderView()
                     }
                     ToolbarItem {
                         Button(action: {
@@ -71,7 +55,34 @@ struct MasterView: View {
             updateModel()
         }
     }
-
+    
+    func addEditModeHeaderView () -> some View {
+        HStack {
+            if isEditing {
+                Button(StringConstants.done) {
+                    self.isEditing.toggle()
+                    doneButtonAction()
+                }
+            } else {
+                EditButton()
+            }
+        }
+    }
+    
+    func addTextField() -> some View {
+        HStack {
+            Image(systemName: ImageName.plusCircle)
+                .foregroundColor(.green)
+            //Text field to get user's entry to add new item
+            TextField(StringConstants.textFieldPlaceHolder, text: $textFieldEntry)
+                .onSubmit {
+                    addItem(text: textFieldEntry)
+                    textFieldEntry = ""
+                }
+        }
+        
+    }
+    
     func updateModel() {
         if let wrappedMasterViewModelItems = UserDefaultManager().getMasterViewItems() {
             masterViewModelItems = wrappedMasterViewModelItems
