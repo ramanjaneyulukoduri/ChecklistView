@@ -72,6 +72,8 @@ struct DetailView: View {
                     }
                 }
             }
+        }.onAppear {
+            updateModel()
         }
     }
     
@@ -90,31 +92,46 @@ struct DetailView: View {
         }
     }
     
+    func updateModel() {
+        if let unwrappedCheckListDataModel = UserDefaultManager().getDetailViewModel(identifier: masterViewId + StringConstants.childId) {
+            checkListDataModelArray = unwrappedCheckListDataModel
+            checkListDataModelResetArray = unwrappedCheckListDataModel
+        }
+    }
+    
+    func updateHeaderOnMasterView() {
+        UserDefaultManager().updateMasterViewItem(id: masterViewId, masterViewDataModel: MasterViewDataModel(id: masterViewId, listItem: headerTextFieldEntry))
+    }
+    
     func doneButtonAction() {
         if !isEditing {
             checkListDataModelResetArray = checkListDataModelArray
             addItem(text: textFieldEntry)
+            updateHeaderOnMasterView()
             textFieldEntry = ""
             updatedParentViewModel()
+            syncChildViewModel()
         }
     }
     
     //Undo resetting checkbox status as before
     func resetButtonAction() {
         if isReset {
-            checkListDataModelResetArray = checkListDataModelArray
             checkListDataModelArray.forEach { checkListDataModel in
                 self.updateCheckBoxItem(id: checkListDataModel.id, isChecked: false)
             }
         } else {
             checkListDataModelArray = checkListDataModelResetArray
+            updateModel()
         }
     }
     
     
-    func checkBoxAction(id: String, isChecked: Bool) -> Void {
+    func checkBoxAction(id: String, text: String, isChecked: Bool) -> Void {
         updateCheckBoxItem(id: id, isChecked: isChecked)
+        UserDefaultManager().updateChildViewItem(parentId: masterViewId + StringConstants.childId, childItemId: id, detailViewModel: CheckListDataModel(id: id, isChecked: isChecked, title: text))
     }
+    
     //Update state of checkbox for individua row
     func updateCheckBoxItem(id: String, isChecked: Bool) {
         checkListDataModelArray = checkListDataModelArray.map({ checkListDataModel in
@@ -137,6 +154,12 @@ struct DetailView: View {
         })
     }
     
+    func syncChildViewModel() {
+        checkListDataModelArray.forEach { checkListDataModel in
+            UserDefaultManager().updateChildViewItem(parentId: masterViewId + StringConstants.childId, childItemId: checkListDataModel.id, detailViewModel: checkListDataModel)
+        }
+    }
+    
     //Enter new entry to checklist
     private func addItem(text: String) {
         guard !text.isEmpty else { return }
@@ -145,9 +168,20 @@ struct DetailView: View {
         checkListDataModelArray.append(checkListDataModel)
     }
     
+    func saveDetailViewModel(identifier: String, isChecked: Bool, title: String) {
+        let checkListDataModel = CheckListDataModel(id: identifier, isChecked: isChecked, title: title)
+        UserDefaultManager().saveDetailViewModel(identifier: masterViewId + StringConstants.childId, detailModel: checkListDataModel)
+        updateModel()
+    }
+    
     //Delete entry from checklist
     private func deleteItems(offsets: IndexSet) {
+        let itemToDelete = offsets.map { self.checkListDataModelArray[$0].id }
         checkListDataModelArray.remove(atOffsets: offsets)
+        if let itemIdToDelete = itemToDelete.first {
+            UserDefaultManager().deleteChildViewItem(parentId: masterViewId + StringConstants.childId, childItemId: itemIdToDelete)
+        }
+        updateModel()
     }
 }
 

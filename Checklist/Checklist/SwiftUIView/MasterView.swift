@@ -10,10 +10,14 @@ import SwiftUI
 struct MasterView: View {
     
     //State variable used to refresh view when any value in that screen changes. e.g adding new entry to checklist
-    @State var masterViewModelItems : [MasterViewDataModel] = [] //to store users entry for master screen
+    @State var masterViewModelItems : [MasterViewDataModel] = [] {
+        didSet {
+            syncMasterViewItems()
+        }}
     @State var isEditing: Bool = false //to decide if screen is in editing mode so that we can delete entry if needed
     @State var textFieldEntry: String = "" //to store value entered by user while creating new entry
-    
+    @State var updateFromChild: Bool = false
+
     var body: some View {
         NavigationView { //this to show navigation bar on top of it.
             VStack {
@@ -63,9 +67,27 @@ struct MasterView: View {
                         }
                     }
                 }
+        }.onAppear {
+            updateModel()
         }
     }
 
+    func updateModel() {
+        if let wrappedMasterViewModelItems = UserDefaultManager().getMasterViewItems() {
+            masterViewModelItems = wrappedMasterViewModelItems
+        }
+    }
+    
+    func syncMasterViewItems() {
+        
+        for  masterViewModelItem in masterViewModelItems {
+            let id = masterViewModelItem.listItem?.replacingOccurrences(of: " ", with: "") ?? ""
+            UserDefaultManager().updateMasterViewItem(id: id,
+                                                      masterViewDataModel: MasterViewDataModel(id: id,
+                                                                                               listItem: masterViewModelItem.listItem ?? ""))
+        }
+    }
+    
     //Button action when user click on done button to save entry and update view.
     func doneButtonAction() {
         if !isEditing {
@@ -78,12 +100,17 @@ struct MasterView: View {
         guard !text.isEmpty else { return }
         let id = text.replacingOccurrences(of: " ", with: "")
         let masterDetailModel = MasterViewDataModel(id: id, listItem: text)
-        masterViewModelItems.append(masterDetailModel)
+        UserDefaultManager().saveMasterViewItems(masterViewDataModel: masterDetailModel)
+        updateModel()
     }
     
     //Delete item when user click on delete button
     private func deleteItems(offsets: IndexSet) {
+        let itemToDelete = offsets.map { self.masterViewModelItems[$0].id }
         masterViewModelItems.remove(atOffsets: offsets)
+        if let itemIdToDelete = itemToDelete.first {
+            UserDefaultManager().deleteMasterViewItem(id: itemIdToDelete ?? "")
+        }
     }
 }
 

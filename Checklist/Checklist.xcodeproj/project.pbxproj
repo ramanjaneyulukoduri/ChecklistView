@@ -19,6 +19,7 @@
 		AB04416F2802DC08008539B5 /* MasterViewDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB04416E2802DC08008539B5 /* MasterViewDataModel.swift */; };
 		AB0441712802DCCE008539B5 /* CheckListDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0441702802DCCE008539B5 /* CheckListDataModel.swift */; };
 		AB0441732802DD28008539B5 /* StringConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0441722802DD28008539B5 /* StringConstants.swift */; };
+		AB711963280947A600514793 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB711962280947A600514793 /* UserDefaults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		AB04416E2802DC08008539B5 /* MasterViewDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewDataModel.swift; sourceTree = "<group>"; };
 		AB0441702802DCCE008539B5 /* CheckListDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListDataModel.swift; sourceTree = "<group>"; };
 		AB0441722802DD28008539B5 /* StringConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringConstants.swift; sourceTree = "<group>"; };
+		AB711962280947A600514793 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				AB04413D2802DB17008539B5 /* ChecklistApp.swift */,
+				AB7119612809479A00514793 /* Database */,
 				AB0441692802DBC1008539B5 /* SwiftUIView */,
 				AB04416C2802DBDD008539B5 /* Model */,
 				AB04416D2802DBE9008539B5 /* Resources */,
@@ -164,6 +167,14 @@
 				AB0441722802DD28008539B5 /* StringConstants.swift */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		AB7119612809479A00514793 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				AB711962280947A600514793 /* UserDefaults.swift */,
+			);
+			path = Database;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -300,6 +311,7 @@
 				AB0441402802DB17008539B5 /* MasterView.swift in Sources */,
 				AB04416B2802DBD6008539B5 /* DetailView.swift in Sources */,
 				AB0441732802DD28008539B5 /* StringConstants.swift in Sources */,
+				AB711963280947A600514793 /* UserDefaults.swift in Sources */,
 				AB04416F2802DC08008539B5 /* MasterViewDataModel.swift in Sources */,
 				AB04413E2802DB17008539B5 /* ChecklistApp.swift in Sources */,
 				AB0441682802DBBD008539B5 /* CheckView.swift in Sources */,
