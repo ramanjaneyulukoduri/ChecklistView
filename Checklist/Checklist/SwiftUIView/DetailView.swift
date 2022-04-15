@@ -9,14 +9,21 @@ import SwiftUI
 
 //This view display all information for checklist items
 struct DetailView: View {
-    @State var checkListDataModelArray : [CheckListDataModel] = []  //to save users entry in checklist items
+    @State var checkListDataModelArray : [CheckListDataModel] = []  {
+        didSet {
+            updatedParentViewModel()
+        }}
     @State var checkListDataModelResetArray : [CheckListDataModel] = []
     @State var isEditing: Bool = false
     @State var isReset: Bool = false
     @State var textFieldEntry: String = ""
     @State var headerTextFieldEntry: String = ""
     let masterViewId: String
-    @Binding var masterViewModelItems : [MasterViewDataModel] //to update view in parent screen when user update header items
+    @Binding var masterViewModelItems : [MasterViewDataModel] {
+        didSet {
+            syncMasterViewItems()
+        }
+    } //to update view in parent screen when user update header items
     
     var body: some View {
         VStack {
@@ -27,8 +34,11 @@ struct DetailView: View {
                     CheckView(id: item.id,
                               isChecked: item.isChecked,
                               title: item.title ?? "",
-                              checkBoxAction: checkBoxAction)
+                              checkBoxAction: updateCheckBoxItem)
                 } .onDelete(perform: deleteItems) //Delete entry from user
+                    .onMove { IndexSet, index in
+                        checkListDataModelArray.move(fromOffsets: IndexSet, toOffset: index)
+                    }
                 if isEditing {
                     HStack {
                         Image(systemName: ImageName.plusCircle)
@@ -57,18 +67,14 @@ struct DetailView: View {
                                 .foregroundColor(isReset ? .red : .blue)
                         }
                         
-                        Button(action: {
+                        Button(isEditing ? StringConstants.done : StringConstants.edit) {
                             self.isEditing.toggle()
                             doneButtonAction()
-                        }) {
-                            Text(isEditing ? StringConstants.done : StringConstants.edit)
                         }
                     }
                 } else {
-                    Button(action: {
+                    Button(StringConstants.edit) {
                         self.isEditing.toggle()
-                    }) {
-                        Text(StringConstants.edit)
                     }
                 }
             }
@@ -93,24 +99,15 @@ struct DetailView: View {
     }
     
     func updateModel() {
-        if let unwrappedCheckListDataModel = UserDefaultManager().getDetailViewModel(identifier: masterViewId + StringConstants.childId) {
-            checkListDataModelArray = unwrappedCheckListDataModel
-            checkListDataModelResetArray = unwrappedCheckListDataModel
-        }
-    }
-    
-    func updateHeaderOnMasterView() {
-        UserDefaultManager().updateMasterViewItem(id: masterViewId, masterViewDataModel: MasterViewDataModel(id: masterViewId, listItem: headerTextFieldEntry))
+        checkListDataModelArray = masterViewModelItems.filter({$0.id == masterViewId}).first?.childItems ?? []
+        checkListDataModelResetArray = checkListDataModelArray
     }
     
     func doneButtonAction() {
         if !isEditing {
             checkListDataModelResetArray = checkListDataModelArray
             addItem(text: textFieldEntry)
-            updateHeaderOnMasterView()
             textFieldEntry = ""
-            updatedParentViewModel()
-            syncChildViewModel()
         }
     }
     
@@ -124,12 +121,6 @@ struct DetailView: View {
             checkListDataModelArray = checkListDataModelResetArray
             updateModel()
         }
-    }
-    
-    
-    func checkBoxAction(id: String, text: String, isChecked: Bool) -> Void {
-        updateCheckBoxItem(id: id, isChecked: isChecked)
-        UserDefaultManager().updateChildViewItem(parentId: masterViewId + StringConstants.childId, childItemId: id, detailViewModel: CheckListDataModel(id: id, isChecked: isChecked, title: text))
     }
     
     //Update state of checkbox for individua row
@@ -149,15 +140,15 @@ struct DetailView: View {
             var updatedmasterViewDataModel = masterViewDataModel
             if updatedmasterViewDataModel.id == masterViewId {
                 updatedmasterViewDataModel.listItem = headerTextFieldEntry
+                updatedmasterViewDataModel.childItems = checkListDataModelArray
             }
             return updatedmasterViewDataModel
         })
     }
     
-    func syncChildViewModel() {
-        checkListDataModelArray.forEach { checkListDataModel in
-            UserDefaultManager().updateChildViewItem(parentId: masterViewId + StringConstants.childId, childItemId: checkListDataModel.id, detailViewModel: checkListDataModel)
-        }
+    func syncMasterViewItems() {
+        UserDefaultManager().save(data: masterViewModelItems,
+                                  identifier: StringConstants.masterViewDataModelIdentifier)
     }
     
     //Enter new entry to checklist
@@ -168,20 +159,9 @@ struct DetailView: View {
         checkListDataModelArray.append(checkListDataModel)
     }
     
-    func saveDetailViewModel(identifier: String, isChecked: Bool, title: String) {
-        let checkListDataModel = CheckListDataModel(id: identifier, isChecked: isChecked, title: title)
-        UserDefaultManager().saveDetailViewModel(identifier: masterViewId + StringConstants.childId, detailModel: checkListDataModel)
-        updateModel()
-    }
-    
     //Delete entry from checklist
     private func deleteItems(offsets: IndexSet) {
-        let itemToDelete = offsets.map { self.checkListDataModelArray[$0].id }
         checkListDataModelArray.remove(atOffsets: offsets)
-        if let itemIdToDelete = itemToDelete.first {
-            UserDefaultManager().deleteChildViewItem(parentId: masterViewId + StringConstants.childId, childItemId: itemIdToDelete)
-        }
-        updateModel()
     }
 }
 

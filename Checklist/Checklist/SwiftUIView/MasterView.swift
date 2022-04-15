@@ -30,6 +30,9 @@ struct MasterView: View {
                             Text("\(item.listItem ?? "")")
                         }
                     } .onDelete(perform: deleteItems)
+                        .onMove { IndexSet, index in
+                            masterViewModelItems.move(fromOffsets: IndexSet, toOffset: index)
+                        }
                     if isEditing {
                         HStack {
                             Image(systemName: ImageName.plusCircle)
@@ -48,16 +51,13 @@ struct MasterView: View {
                 .toolbar { //to show edit and add button on navigation bar
                     ToolbarItem(placement: .navigationBarLeading) {
                         if isEditing {
-                            Button(action: {
+                            Button(StringConstants.done) {
                                 self.isEditing.toggle()
                                 doneButtonAction()
-                            }) {
-                                Text(StringConstants.done)
                             }
                         } else {
                             EditButton()
                         }
-                        
                     }
                     ToolbarItem {
                         Button(action: {
@@ -79,13 +79,7 @@ struct MasterView: View {
     }
     
     func syncMasterViewItems() {
-        
-        for  masterViewModelItem in masterViewModelItems {
-            let id = masterViewModelItem.listItem?.replacingOccurrences(of: " ", with: "") ?? ""
-            UserDefaultManager().updateMasterViewItem(id: id,
-                                                      masterViewDataModel: MasterViewDataModel(id: id,
-                                                                                               listItem: masterViewModelItem.listItem ?? ""))
-        }
+        UserDefaultManager().save(data: masterViewModelItems, identifier:  StringConstants.masterViewDataModelIdentifier)
     }
     
     //Button action when user click on done button to save entry and update view.
@@ -100,17 +94,12 @@ struct MasterView: View {
         guard !text.isEmpty else { return }
         let id = text.replacingOccurrences(of: " ", with: "")
         let masterDetailModel = MasterViewDataModel(id: id, listItem: text)
-        UserDefaultManager().saveMasterViewItems(masterViewDataModel: masterDetailModel)
-        updateModel()
+        masterViewModelItems.append(masterDetailModel)
     }
     
     //Delete item when user click on delete button
     private func deleteItems(offsets: IndexSet) {
-        let itemToDelete = offsets.map { self.masterViewModelItems[$0].id }
         masterViewModelItems.remove(atOffsets: offsets)
-        if let itemIdToDelete = itemToDelete.first {
-            UserDefaultManager().deleteMasterViewItem(id: itemIdToDelete ?? "")
-        }
     }
 }
 
