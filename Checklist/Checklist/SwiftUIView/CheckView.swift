@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-//Checkview to use checkbox item to display in Master and Detail view.
+/// Checkview to use checkbox item to display in Master and Detail view.
 struct CheckView: View {
     let id: Int
     var isChecked:Bool

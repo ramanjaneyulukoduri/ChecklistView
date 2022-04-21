@@ -9,14 +9,16 @@ import SwiftUI
 
 struct MasterView: View {
     
-    //State variable used to refresh view when any value in that screen changes. e.g adding new entry to checklist
+    ///State variable used to refresh view when any value in that screen changes. e.g adding new entry to checklist
     @State var masterViewModelItems : [MasterViewDataModel] = [] {
         didSet {
             syncMasterViewItems()
         }}
-    @State var isEditing: Bool = false //to decide if screen is in editing mode so that we can delete entry if needed
-    @State var textFieldEntry: String = "" //to store value entered by user while creating new entry
-    @State var updateFromChild: Bool = false
+    /// Boolean flag to maintain editing status of screen so that we can delete entry if needed
+    @State var isEditing: Bool = false
+    
+    /// Variable to store value entered by user while creating new entry
+    @State var textFieldEntry: String = ""
     
     var body: some View {
         NavigationView { //this to show navigation bar on top of it.
@@ -57,6 +59,8 @@ struct MasterView: View {
         }
     }
     
+    /// Adding Header view to Master view
+    /// - Returns: Header view with done button and edit button
     func addEditModeHeaderView () -> some View {
         HStack {
             if isEditing {
@@ -70,6 +74,8 @@ struct MasterView: View {
         }
     }
     
+    /// Show text field for user entry in editing mode
+    /// - Returns: Text field view to to get user input
     func addTextField() -> some View {
         HStack {
             Image(systemName: ImageName.plusCircle)
@@ -84,6 +90,7 @@ struct MasterView: View {
         
     }
     
+    /// Function to load data when screen appears on device. it fetched entry from user default and show on screen
     func updateModel() {
         if let wrappedMasterViewModelItems = UserDefaultManager().getMasterViewItems() {
             masterViewModelItems = wrappedMasterViewModelItems
@@ -91,11 +98,13 @@ struct MasterView: View {
         }
     }
     
+    
+    /// It sync user entry to store it in UserDefaults. so that user entries are sync with database.
     func syncMasterViewItems() {
         UserDefaultManager().save(data: masterViewModelItems, identifier:  StringConstants.masterViewDataModelIdentifier)
     }
     
-    //Button action when user click on done button to save entry and update view.
+    ///Button action when user click on done button to save entry and update view.
     func doneButtonAction() {
         if !isEditing {
             addItem(text: textFieldEntry)
@@ -103,6 +112,8 @@ struct MasterView: View {
         }
     }
     
+    
+    /// Update item index when user want to change position if items in edit more
     func updatedIndexOfArray() {
         for (index, item) in masterViewModelItems.enumerated() {
             masterViewModelItems = masterViewModelItems.map({ checkListDataModel in
@@ -115,6 +126,9 @@ struct MasterView: View {
         }
     }
     
+    
+    /// Function to update screen and database from user input to add new item entry.
+    /// - Parameter text: user entered text
     private func addItem(text: String) {
         guard !text.isEmpty else { return }
         let id = masterViewModelItems.count + 1
@@ -122,7 +136,7 @@ struct MasterView: View {
         masterViewModelItems.append(masterDetailModel)
     }
     
-    //Delete item when user click on delete button
+    ///Delete item when user click on delete button
     private func deleteItems(offsets: IndexSet) {
         masterViewModelItems.remove(atOffsets: offsets)
     }

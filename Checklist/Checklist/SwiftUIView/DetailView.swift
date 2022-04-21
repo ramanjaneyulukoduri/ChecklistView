@@ -9,12 +9,15 @@ import SwiftUI
 
 //This view display all information for checklist items
 struct DetailView: View {
+    
+    /// Binding variable to sync data with UserDefaults
     @Binding var masterViewModelItems : [MasterViewDataModel] {
         didSet {
             syncMasterViewItems()
         }
-    } //to update view in parent screen when user update header items
+    }
     
+    /// State variable to update Detail view items with master view.
     @State var checkListDataModelArray : [CheckListDataModel] = []  {
         didSet {
             updatedParentViewModel()
@@ -64,6 +67,8 @@ struct DetailView: View {
         }
     }
     
+    
+    /// Update index of item when user drag items up and down.
     func updatedIndexOfArray() {
         for (index, item) in checkListDataModelArray.enumerated() {
             checkListDataModelArray = checkListDataModelArray.map({ checkListDataModel in
@@ -76,7 +81,9 @@ struct DetailView: View {
         }
     }
     
-    //Return header view on top of List
+    
+    /// Return header view on top of List
+    /// - Returns: Header with text field if in editing mode, else static text  view.
     func getHeaderView() -> some View {
         HStack {
             if isEditing{
@@ -92,6 +99,7 @@ struct DetailView: View {
     }
     
     
+    /// Add text field view
     func addTextFieldView() -> some View {
         HStack {
             Image(systemName: ImageName.plusCircle)
@@ -104,6 +112,9 @@ struct DetailView: View {
         }
     }
     
+    
+    /// Show Header view with reset or undo reset button based on user selection.
+    /// - Returns: <#description#>
     func addEditModeHeaderView () -> some View {
         HStack {
             Button(action: {
@@ -121,12 +132,15 @@ struct DetailView: View {
         }
     }
     
+    /// function to update items based on user action.
     func updateModel() {
         checkListDataModelArray = masterViewModelItems.filter({$0.id == masterViewId}).first?.childItems ?? []
         checkListDataModelArray = checkListDataModelArray.sorted(by: {$0.id < $1.id})
         checkListDataModelResetArray = checkListDataModelArray
     }
     
+    
+    /// Completed editing mode and update screen based on user action.
     func doneButtonAction() {
         if !isEditing {
             checkListDataModelResetArray = checkListDataModelArray
@@ -135,7 +149,7 @@ struct DetailView: View {
         }
     }
     
-    //Undo resetting checkbox status as before
+    ///Undo resetting checkbox status as before
     func resetButtonAction() {
         if isReset {
             checkListDataModelArray.forEach { checkListDataModel in
@@ -147,7 +161,7 @@ struct DetailView: View {
         }
     }
     
-    //Update state of checkbox for individua row
+    ///Update state of checkbox for individua row
     func updateCheckBoxItem(id: Int, isChecked: Bool) {
         checkListDataModelArray = checkListDataModelArray.map({ checkListDataModel in
             var updateModel = checkListDataModel
@@ -158,7 +172,7 @@ struct DetailView: View {
         })
     }
     
-    //Updating name of items in parent screen if user update it in child screen
+    ///Updating name of items in parent screen if user update it in child screen
     func updatedParentViewModel() {
         masterViewModelItems = masterViewModelItems.map({ masterViewDataModel in
             var updatedmasterViewDataModel = masterViewDataModel
@@ -170,12 +184,13 @@ struct DetailView: View {
         })
     }
     
+    /// Update Userdefault after user completed editing.
     func syncMasterViewItems() {
         UserDefaultManager().save(data: masterViewModelItems,
                                   identifier: StringConstants.masterViewDataModelIdentifier)
     }
     
-    //Enter new entry to checklist
+    ///Enter new entry to checklist
     private func addItem(text: String) {
         guard !text.isEmpty else { return }
         let id = checkListDataModelArray.count + 1
@@ -183,7 +198,7 @@ struct DetailView: View {
         checkListDataModelArray.append(checkListDataModel)
     }
     
-    //Delete entry from checklist
+    ///Delete entry from checklist
     private func deleteItems(offsets: IndexSet) {
         checkListDataModelArray.remove(atOffsets: offsets)
     }

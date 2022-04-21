@@ -11,7 +11,7 @@ import SwiftUI
 struct ChecklistApp: App {
     var body: some Scene {
         WindowGroup {
-            //Entry point of application, from here app starts
+            ///Entry point of application, from here app starts
             MasterView()
         }
     }

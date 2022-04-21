@@ -7,7 +7,7 @@
 
 import Foundation
 
-//Structure to save Detail view screen information
+/// Structure to store and parse model from JSON response.
 struct CheckListDataModel: Codable, Identifiable {
     var id: Int
     var isChecked: Bool
