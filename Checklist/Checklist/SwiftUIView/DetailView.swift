@@ -165,7 +165,7 @@ struct DetailView: View {
     func updateCheckBoxItem(id: Int, isChecked: Bool) {
         checkListDataModelArray = checkListDataModelArray.map({ checkListDataModel in
             var updateModel = checkListDataModel
-            if updateModel.id == id {
+            if updateModel.id == id+1 {
                 updateModel.isChecked = isChecked
             }
             return updateModel
