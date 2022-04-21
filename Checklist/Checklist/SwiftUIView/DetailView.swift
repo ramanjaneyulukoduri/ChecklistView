@@ -193,6 +193,7 @@ struct DetailView: View {
     
     ///Enter new entry to checklist
     private func addItem(text: String) {
+        updatedParentViewModel()
         guard !text.isEmpty else { return }
         let id = checkListDataModelArray.count + 1
         let checkListDataModel = CheckListDataModel(id: id, isChecked: false, title: text)
