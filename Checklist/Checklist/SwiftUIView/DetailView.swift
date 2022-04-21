@@ -36,7 +36,7 @@ struct DetailView: View {
                 getHeaderView()
                 
                 ForEach(Array(checkListDataModelArray.enumerated()), id: \.offset) { (index, item) in
-                    CheckView(id: index,
+                    CheckView(id: index+1,
                               isChecked: item.isChecked,
                               title: item.title ?? "",
                               checkBoxAction: updateCheckBoxItem)
@@ -152,6 +152,7 @@ struct DetailView: View {
     ///Undo resetting checkbox status as before
     func resetButtonAction() {
         if isReset {
+            checkListDataModelResetArray = checkListDataModelArray
             checkListDataModelArray.forEach { checkListDataModel in
                 self.updateCheckBoxItem(id: checkListDataModel.id, isChecked: false)
             }
@@ -165,7 +166,7 @@ struct DetailView: View {
     func updateCheckBoxItem(id: Int, isChecked: Bool) {
         checkListDataModelArray = checkListDataModelArray.map({ checkListDataModel in
             var updateModel = checkListDataModel
-            if updateModel.id == id+1 {
+            if updateModel.id == id {
                 updateModel.isChecked = isChecked
             }
             return updateModel
